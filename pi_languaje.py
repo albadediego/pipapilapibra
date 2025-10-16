@@ -11,6 +11,12 @@ class ES_PI(Enum):
     SOLO_P = 1
     HAY_PI = 2
 
+
+class TipoCaracter(Enum):
+    LETRA = 1
+    ESPACIO = 2
+    OTRO = 3
+
 def es_vocal(caracter):
     return caracter in VOCALES_ABIERTAS or caracter in VOCALES_CERRADAS
 
@@ -139,7 +145,83 @@ def pi_a_normal(palabra):
         resultado += caracter
     return resultado
 
+def tokenizar(frase):
+    """
+    Divide una frase en tokens según las reglas del modelo:
+    - Letras válidas: las definidas en las constantes del sistema.
+    - También se aceptan números.
+    - Espacios y signos de puntuación se devuelven como tokens independientes.
+    """
+    if not frase:
+        return []
+
+    LETRAS_VALIDAS = set(
+        sum([list(CONSONANTES), list(VOCALES_ABIERTAS), list(VOCALES_CERRADAS), list(SEMIVOCALES)], [])
+    )
+
+    tokens = []
+    token_actual = ""
+    tipo_actual = None  # Será un valor de TipoCaracter
+
+    def tipo_de_caracter(c):
+        if c.lower() in LETRAS_VALIDAS or c.isdigit():
+            return TipoCaracter.LETRA
+        elif c.isspace():
+            return TipoCaracter.ESPACIO
+        else:
+            return TipoCaracter.OTRO
+
+    for caracter in frase:
+        tipo = tipo_de_caracter(caracter)
+
+        if tipo_actual is None:
+            token_actual = caracter
+            tipo_actual = tipo
+        elif tipo == tipo_actual:
+            token_actual += caracter
+        else:
+            tokens.append(token_actual)
+            token_actual = caracter
+            tipo_actual = tipo
+
+    if token_actual:
+        tokens.append(token_actual)
+
+    return tokens
+
+def es_token_procesable(token):
+    """
+    Devuelve True si el token está formado solo por letras válidas o números,
+    según las constantes definidas en el sistema (CONSONANTES, VOCALES, SEMIVOCALES).
+    """
+    if not token:
+        return False
+
+    letras_validas = set(
+        sum([list(CONSONANTES), list(VOCALES_ABIERTAS), list(VOCALES_CERRADAS), list(SEMIVOCALES)], [])
+    )
+
+    for c in token.lower():
+        if c not in letras_validas and not c.isdigit():
+            return False
+
+    return True
 
 
-if __name__ == "__main__":
-    print(completar(["tra", "po", "te"], "transportes"))
+def procesar_tokens(tokens, funcion_transformacion):
+    """
+    Recorre los tokens y aplica la función indicada (normal_a_pi o pi_a_normal)
+    solo a aquellos que sean procesables (palabras o alfanuméricos).
+    El resto de tokens se dejan sin modificar.
+    """
+    if not tokens:
+        return []
+
+    resultado = []
+    for token in tokens:
+        if es_token_procesable(token):
+            resultado.append(funcion_transformacion(token))
+        else:
+            resultado.append(token)
+
+    return resultado

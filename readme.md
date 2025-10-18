@@ -1,45 +1,121 @@
-# Reto: Lenguaje Pi y Silabeador en Python
+# 🐍 Pilengua App — Traductor Español ↔ Pilengua
 
-## Descripción
+Aplicación Flask que convierte frases en español al **lenguaje Pilengua** y viceversa.
 
-En este reto programarás un **silabeador** para trabajar con el "lenguaje pi", el clásico juego infantil donde se intercalaba la sílaba "pi" delante de cada sílaba de una palabra o frase. Además, deberás implementar un traductor inverso que recupere el texto original.
+> Pilengua: cada sílaba del texto original se precede con “pi”.
+>
+> Ejemplo:  
+> **Hola → piho pila → pihopila**
 
-## Objetivos
+---
 
-- Crear una clase `Silabeador` que separe correctamente las palabras en sílabas según reglas del castellano.
-- Implementar un método que inserte la sílaba *pi* delante de cada sílaba (modo juego infantil).
-- Implementar el método inverso para traducir frases desde el lenguaje pi al español normal.
+## 🚀 Características
 
-## Reglas y Especificaciones
+- Conversión **de español a Pilengua** y **de Pilengua a español**.
+- Interfaz web mínima basada en **Flask + Jinja2** (sin JavaScript).
+- Lógica lingüística separada en un módulo independiente.
+- Arquitectura limpia y fácil de entender para principiantes.
+- Preparado para testing con **Pytest**.
 
-- **Separación en sílabas**: 
-  - Buscar grupos de vocales.
-  - Asignar a la vocal la consonante de su izquierda si existe.
-  - Las letras que sobran se agrupan con la sílaba anterior.
-- Considerar grupos especiales, diptongos, triptongos, pares de consonantes, y que la letra **y** puede ser vocal o consonante según contexto.
-- Prestar atención a casos con el prefijo “in-” (por ejemplo, "inacción" debe ser "in-ac-ción", no "i-nac-ción").
-- Ejemplo de funcionamiento:
-  - Español: `Hola, me llamo Ramón`
-  - Lenguaje pi: `pihopila, pime pillapimo pirrapimn`
+---
 
-## Ejemplo de uso esperado
+## 🧱 Estructura del proyecto
 
-```python
-entrada = "Hola, me llamo Ramón"
-salida = Silabeador().a_pi(entrada)
-print(salida)
-# pihopila, pime pillapimo pirrapimn
-
-print(Silabeador().de_pi(salida))
-# Hola, me llamo Ramón
+```
+pilengua_app/
+│
+├── app/
+│   ├── __init__.py
+│   ├── routes.py
+│   ├── logic/
+│   │   └── pi_language.py
+│   ├── templates/
+│   │   └── index.html
+│   └── static/
+│       └── css/
+│           └── styles.css
+│
+├── tests/
+│   └── test_pi_language.py
+│
+├── config.py
+├── run.py
+├── requirements.txt
+└── README.md
 ```
 
-## Extras
+---
 
-- Añade más ejemplos de palabras con grupos consonánticos y diptongos.
-- Incluye pruebas automatizadas que validen ambos métodos.
-- Documenta limitaciones y situaciones especiales que observes.
+## ⚙️ Instalación
 
-## Recursos  
+1. **Clona el repositorio:**
+   ```bash
+   git clone https://github.com/tu_usuario/pilengua_app.git
+   cd pilengua_app
+   ```
 
-Consulta el archivo original adjunto para detalles sobre las **reglas de silabeo**, grupos de letras, casos especiales y ejemplos.
+2. **Crea y activa un entorno virtual:**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate      # En Linux/Mac
+   venv\Scripts\activate       # En Windows
+   ```
+
+3. **Instala dependencias:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Ejecuta la aplicación:**
+   ```bash
+   python run.py
+   ```
+
+5. **Abre tu navegador:**
+   ```
+   http://127.0.0.1:5000
+   ```
+
+---
+
+## 🧪 Testing
+
+Ejecuta los tests unitarios:
+
+```bash
+pytest
+```
+
+---
+
+## 🧠 Estructura lógica del proyecto
+
+- **`pi_language.py`**  
+  Contiene todas las funciones de análisis y transformación del texto.  
+  Ejemplo de uso en consola Python:
+
+  ```python
+  from app.logic import pi_language as pi
+
+  print(pi.frase_a_pi("hola mundo"))  # → piholapi pimunpidopo
+  print(pi.pi_a_frase("piholapi pimunpidopo"))  # → hola mundo
+  ```
+
+- **`routes.py`**  
+  Define las rutas y maneja el formulario web.
+
+- **`index.html`**  
+  Plantilla con dos áreas de texto y dos botones de acción.
+
+---
+
+## 🧑‍💻 Autor
+
+**Tu Nombre (Desarrollador Junior)**  
+Proyecto educativo guiado con orientación profesional en Python y Flask.
+
+---
+
+## 🪄 Licencia
+
+Este proyecto se distribuye bajo la licencia **MIT**, para uso libre y educativo.

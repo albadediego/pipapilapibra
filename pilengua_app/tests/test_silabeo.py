@@ -1,5 +1,5 @@
 import pytest
-from pi_languaje import silabear
+from pilengua_app.app.logic.pi_language import silabear
 
 def test_silabear_basicos():
     # hola → ho-la

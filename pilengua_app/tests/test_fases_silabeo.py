@@ -1,5 +1,5 @@
 import pytest
-from pi_languaje import obtener_grupos_vocalicos, es_grupo_vocalico_ok, add_grupo_consonantes_delante
+from pilengua_app.app.logic.pi_language import obtener_grupos_vocalicos, es_grupo_vocalico_ok, add_grupo_consonantes_delante
 
 @pytest.mark.parametrize("grupo, car, esperado", [
     # --- Casos base (inicio de grupo) ---

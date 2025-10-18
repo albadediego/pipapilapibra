@@ -9,13 +9,13 @@ PARES_CONSONANTES = ("bl", "cl", "fl", "gl", "kl", "pl", "tl", "br", "cr", "dr",
 class ES_PI(Enum):
     NO_HAY_PI = 0
     SOLO_P = 1
-    HAY_PI = 2
-
+    YA_HAY_PI = 2
 
 class TipoCaracter(Enum):
     LETRA = 1
     ESPACIO = 2
     OTRO = 3
+
 
 def es_vocal(caracter):
     return caracter in VOCALES_ABIERTAS or caracter in VOCALES_CERRADAS
@@ -123,29 +123,23 @@ def normal_a_pi(palabra):
     return resultado
 
 def pi_a_normal(palabra):
-    silabeada = silabear(palabra)
-    resultado = []
-    for i, silaba in enumerate(silabeada):
-        if i % 2 != 0:
-            resultado.append(silaba)
-
-    return "".join(resultado)
-
-def pi_a_normal(palabra):
     resultado = ""
     pi_en_construccion = ES_PI.NO_HAY_PI
     for caracter in palabra:
-        if caracter == "p" and not pi_en_construccion == ES_PI.NO_HAY_PI:
+        if caracter == "p" and pi_en_construccion == ES_PI.NO_HAY_PI:
             pi_en_construccion = ES_PI.SOLO_P
             continue
+
         if caracter == "i" and pi_en_construccion == ES_PI.SOLO_P:
-            pi_en_construccion = ES_PI.HAY_PI
+            pi_en_construccion = ES_PI.YA_HAY_PI
             continue
+
         pi_en_construccion = ES_PI.NO_HAY_PI
         resultado += caracter
+
     return resultado
 
-def tokenizar(frase):
+def tokenizar(frase: str) -> list[str]:
     """
     Divide una frase en tokens según las reglas del modelo:
     - Letras válidas: las definidas en las constantes del sistema.
@@ -164,7 +158,7 @@ def tokenizar(frase):
     tipo_actual = None  # Será un valor de TipoCaracter
 
     def tipo_de_caracter(c):
-        if c.lower() in LETRAS_VALIDAS or c.isdigit():
+        if c.lower() in LETRAS_VALIDAS:
             return TipoCaracter.LETRA
         elif c.isspace():
             return TipoCaracter.ESPACIO
@@ -202,7 +196,7 @@ def es_token_procesable(token):
     )
 
     for c in token.lower():
-        if c not in letras_validas and not c.isdigit():
+        if c not in letras_validas:
             return False
 
     return True
@@ -225,3 +219,38 @@ def procesar_tokens(tokens, funcion_transformacion):
             resultado.append(token)
 
     return resultado
+
+def reconstruir_frase(tokens):
+    """
+    Toma una lista de tokens y devuelve una cadena con todos ellos concatenados
+    en el mismo orden. No altera los tokens ni introduce separadores.
+    """
+    if not tokens:
+        return ""
+
+    return "".join(tokens)
+
+def frase_a_pi(frase):
+    """
+    Convierte una frase completa al lenguaje pi usando el pipeline:
+    tokenizar -> procesar_tokens(normal_a_pi) -> reconstruir_frase
+    """
+    if not frase:
+        return ""
+
+    tokens = tokenizar(frase)
+    tokens_procesados = procesar_tokens(tokens, normal_a_pi)
+    return reconstruir_frase(tokens_procesados)
+
+
+def pi_a_frase(frase):
+    """
+    Convierte una frase completa del lenguaje pi al español normal usando el pipeline:
+    tokenizar -> procesar_tokens(pi_a_normal) -> reconstruir_frase
+    """
+    if not frase:
+        return ""
+
+    tokens = tokenizar(frase)
+    tokens_procesados = procesar_tokens(tokens, pi_a_normal)
+    return reconstruir_frase(tokens_procesados)

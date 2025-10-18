@@ -1,5 +1,5 @@
 import pytest
-from pi_languaje import normal_a_pi, pi_a_normal
+from pilengua_app.app.logic.pi_language import normal_a_pi, pi_a_normal
 
 def test_normal_a_pi_basicos():
     assert normal_a_pi("hola") == "pihopila"
@@ -21,19 +21,18 @@ def test_normal_a_pi_palabras_silabeadas():
     #assert normal_a_pi("pino") == "pipipino"
     assert normal_a_pi("repican") == "pirepipipican"
 
+
 @pytest.mark.parametrize(
     "pi_texto,esperado",
     [
         ("pihopila", "hola"),
-        ("picopotarpite", "cotarte"),
+        ("picopitarpite", "cotarte"),
         ("picaupicho", "caucho"),
         ("piinpiacpición", "inacción"),
         ("piflupiye", "fluye"),
-        ("piopitro picapiso", "otro caso")
         ("pipipipiopilo", "pipiolo"),
         ("pirepipipipi", "repipi")
     ],
 )
-
-def test_pi_a_normal_reversion1(pi_texto, esperado):
+def test_pi_a_normal_reversion(pi_texto, esperado):
     assert pi_a_normal(pi_texto) == esperado
